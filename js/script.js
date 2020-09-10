@@ -3,6 +3,7 @@
 import gallery from "./gallery-items.js";
 
 let counter = 0;
+let valueofImage = 0;
 
 const Refs = {
     gallery: document.querySelector(".js-gallery"),
@@ -12,33 +13,31 @@ const Refs = {
     lightboxContent: document.querySelector(".lightbox__content"),
 };
 
-const createItem = () => {
-    let valueofImage = 0;
+const createItem = (el) => {
+    const listItem = document.createElement("li");
+    const listLink = document.createElement("a");
+    const listImage = document.createElement("img");
 
-    gallery.forEach((el) => {
-        const listItem = document.createElement("li");
-        const listLink = document.createElement("a");
-        const listImage = document.createElement("img");
+    listItem.classList.add("gallery__item");
+    listLink.classList.add("gallery__link");
+    listImage.classList.add("gallery__image");
 
-        Refs.gallery.appendChild(listItem);
-        listItem.appendChild(listLink);
-        listLink.appendChild(listImage);
+    listLink.setAttribute("href", el.original);
+    listImage.setAttribute("src", el.preview);
+    listImage.setAttribute("data-source", el.original);
+    listImage.setAttribute("alt", el.description);
 
-        listItem.classList.add("gallery__item");
-        listLink.classList.add("gallery__link");
-        listImage.classList.add("gallery__image");
+    listImage.setAttribute("data-id", valueofImage);
+    valueofImage++;
 
-        listLink.setAttribute("href", el.original);
-        listImage.setAttribute("src", el.preview);
-        listImage.setAttribute("data-source", el.original);
-        listImage.setAttribute("alt", el.description);
+    listItem.appendChild(listLink);
+    listLink.appendChild(listImage);
 
-        listImage.setAttribute("data-id", valueofImage);
-        valueofImage++;
-    });
+    return listItem;
 };
 
-createItem();
+const galleryCards = gallery.map((el) => createItem(el));
+Refs.gallery.append(...galleryCards);
 
 const onGalleryClick = (event) => {
     event.preventDefault();
